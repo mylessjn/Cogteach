@@ -1,16 +1,63 @@
-# React + Vite
+# Cogteach
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A teacher writes one lesson prompt, and every student gets it in the form their
+brain is ready for (based on Piaget's stages), with a verified adult checking
+anything that reaches young kids.
 
-Currently, two official plugins are available:
+Built with React (Vite), the k-ID Web SDK, Inworld (Gemini via Router, and TTS),
+and Firebase Firestore.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run it locally
 
-## React Compiler
+You need **Node 22.13 or newer** (`.nvmrc` says 24; with nvm, run `nvm use`).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Install dependencies. The k-ID SDK comes from `k-id-core-web.tgz` in this
+   repo, so there's nothing extra to download.
 
-## Expanding the ESLint configuration
+   ```bash
+   npm install
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Set up the env files. Both are git-ignored.
+
+   ```bash
+   cp .env.example .env
+   cp .env.local.example .env.local
+   ```
+
+   - In `.env`, set `KID_SECRET_KEY` (starts with `kgs_test_`).
+   - In `.env.local`, set `INWORLD_API_KEY`.
+
+   Ask Myles for both keys, privately. Don't paste them in chat channels or
+   commit them. The Firebase values are already filled in and are public.
+
+3. Run the backend and the app, in two terminals:
+
+   ```bash
+   npm run server   # k-ID claims + Inworld, http://localhost:8787
+   ```
+
+   ```bash
+   npm run dev      # the app, http://localhost:5173
+   ```
+
+   Use port **5173**. The k-ID test key only allows that origin, so another
+   port shows "Origin not allowed".
+
+## Trying it
+
+- **Teacher:** open `/teacher`, pass the age gate, then verify you're an adult
+  (k-ID emails you a link; once per browser). Create a class, then use Create to
+  generate, review and publish a lesson.
+- **Student:** open `/student`, enter a name, the class join code and an age.
+  Under 13 in the US, k-ID asks for a parent's email and waits for approval.
+- One browser can hold the teacher and several student profiles, so you can run
+  the whole demo in one window. Saved sessions live in that browser's
+  localStorage.
+
+## Notes
+
+- Firestore is in test mode for the hackathon, so it is not secure. Don't use
+  real student data.
+- `npm run lint` and `npm run build` should both pass before you push.
+- Legal pages: `public/privacy.html` and `public/terms.html` (drafts).
