@@ -14,8 +14,10 @@ const SITE_URL = import.meta.env.VITE_SITE_URL
 export const KID_DECLARE = {
   permissions: [
     { name: 'join-groups' }, // joining a class
-    { name: 'ai-voice-mode' }, // 5–7 lessons read aloud with Inworld voice
+    { name: 'ai-voice-mode' }, // hearing the Inworld voice and saying words into the mic
     { name: 'text-chat-private' }, // optional note to the teacher on a flag
+    { name: 'leaderboard-and-rankings' }, // class leaderboard (12–18)
+    { name: 'custom-avatar' }, // avatar picker (12–18)
   ],
   supportEmail: 'myles.sjn@gmail.com',
   iconUrl: '/icon.png', // bundled 512x512 PNG; the SDK sends it inline

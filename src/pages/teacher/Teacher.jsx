@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
 import {
   KidSessionVerifyAge,
   KidSessionVerifyAgeError,
@@ -8,23 +8,26 @@ import {
   useKidSession,
 } from '@k-id/core'
 import { Route, Routes } from 'react-router-dom'
+import { useAuth } from '../../auth/context.js'
 import { FirebaseMissing, Hero, Layout } from '../../components/Layout.jsx'
+import { createKidBackend } from '../../kid/claim.js'
 import { KidGate } from '../../kid/KidGate.jsx'
-import { teacherId as loadTeacherId } from '../../kid/storage.js'
 import { firebaseConfigured } from '../../lib/firebase.js'
 import ClassPage from './ClassPage.jsx'
 import Classes from './Classes.jsx'
 
-// Teacher -> age gate -> verified adult -> Classes.
+// Teacher login -> age gate -> verified adult -> Classes.
 export default function Teacher() {
-  const [teacherId] = useState(loadTeacherId)
+  const { account, token } = useAuth()
+  const teacherId = account.id
+  const backend = useMemo(() => createKidBackend(token), [token])
 
   return (
     <Layout links={[{ to: '/teacher', label: 'Classes' }]}>
       {!firebaseConfigured ? (
         <FirebaseMissing />
       ) : (
-        <KidGate scope="teacher" playerId={teacherId}>
+        <KidGate key={teacherId} accountId={teacherId} backend={backend}>
           <VerifyIntro />
           <KidSessionVerifyAge>
             <KidSessionVerifyAgePass>

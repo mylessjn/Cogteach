@@ -8,9 +8,9 @@ import StudentsTab from './StudentsTab.jsx'
 
 // Sidebar entries, styled like a course's unit list.
 const TABS = {
-  students: { label: 'Roster', title: 'Students' },
-  create: { label: 'New lesson', title: 'Create' },
-  modify: { label: 'Published', title: 'Modify' },
+  students: { label: 'Students', title: 'Roster' },
+  create: { label: 'Study sets', title: 'New lesson' },
+  modify: { label: 'Lessons', title: 'Published' },
 }
 
 export default function ClassPage({ teacherId }) {

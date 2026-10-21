@@ -9,24 +9,22 @@ import {
   KidSessionProvider,
 } from '@k-id/core'
 import { ClearOnMount } from './ClearOnMount.jsx'
-import { createKidBackend } from './claim.js'
 import { kidKeys, loadId, saveId } from './storage.js'
 
-// One k-ID age gate + session. `scope` keeps its saved ids apart from other
-// sessions in this browser; `age` (optional) skips the widget's age question.
-export function KidGate({ scope, playerId, age, pending, children }) {
-  const keys = useMemo(() => kidKeys(scope), [scope])
+// One k-ID age gate + session per account. k-ID asks the country (auto) and
+// age itself, with whatever input the jurisdiction approves. `backend` (from
+// createKidBackend) sends the claim to our server.
+export function KidGate({ accountId, backend, pending, children }) {
+  const keys = useMemo(() => kidKeys(`acct.${accountId}`), [accountId])
   // Read once per mount so the provider gets stable props.
   const [saved] = useState(() => ({
     sessionId: loadId(keys.sessionId),
     challengeId: loadId(keys.challengeId),
   }))
-  const backend = useMemo(() => createKidBackend(playerId), [playerId])
 
   return (
     <KidSessionProvider
       jurisdiction="auto"
-      age={!saved.sessionId && age != null ? { age } : undefined}
       sessionId={saved.sessionId}
       challengeId={saved.challengeId}
       onSession={(id) => {

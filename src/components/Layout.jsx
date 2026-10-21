@@ -1,10 +1,14 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../auth/context.js'
 
 // Khan Academy-style page: navy header with brand left and links right, gray
-// page, one-line footer.
-export function Layout({ links = [], children, bare = false }) {
+// page, one-line footer. `theme` swaps the page look (e.g. "sunny", "dark").
+export function Layout({ links = [], children, bare = false, theme }) {
+  const { account, signOut } = useAuth()
+  const navigate = useNavigate()
+
   return (
-    <div className="page">
+    <div className={`page ${theme ? `theme-${theme}` : ''}`}>
       <header className="topbar">
         <div className="topbar-inner">
           <Link to="/" className="brand">
@@ -17,6 +21,20 @@ export function Layout({ links = [], children, bare = false }) {
                 {label}
               </NavLink>
             ))}
+            {account && (
+              <>
+                <span className="who">{account.displayName}</span>
+                <button
+                  className="navlink as-button"
+                  onClick={async () => {
+                    await signOut()
+                    navigate(`/login/${account.role}`)
+                  }}
+                >
+                  Log out
+                </button>
+              </>
+            )}
           </nav>
         </div>
       </header>

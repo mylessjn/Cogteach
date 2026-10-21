@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { VersionEditor } from '../../components/VersionEditor.jsx'
-import { getVersion, listenLessons, listenStudents, resolveFlag } from '../../lib/data.js'
+import { useAuth } from '../../auth/context.js'
+import { StudySetEditor } from '../../components/StudySetEditor.jsx'
+import { getMedia, getVersion, listenLessons, listenStudents, resolveFlag } from '../../lib/data.js'
 import { GROUPS, groupById } from '../../lib/groups.js'
-import { publishWithAudio } from './publish.js'
+import { pictureParts } from '../../lib/studyset.js'
+import { makePicture, publishStudySet } from './publish.js'
 
 export default function ModifyTab({ classId, teacherId, flags }) {
   const [lessons, setLessons] = useState(null)
@@ -89,25 +91,67 @@ export default function ModifyTab({ classId, teacherId, flags }) {
   )
 }
 
+const META = ['status', 'reviewedBy', 'reviewedAt']
+const stripMeta = (v) => Object.fromEntries(Object.entries(v).filter(([k]) => !META.includes(k)))
+
 function EditVersion({ classId, teacherId, lessonId, groupId, flags, onClose }) {
-  const [version, setVersion] = useState(null)
+  const { token } = useAuth()
+  const [studySet, setStudySet] = useState(null)
+  const [pictures, setPictures] = useState({})
+  const [pictureError, setPictureError] = useState(null)
   const [reviewed, setReviewed] = useState(false)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState(null)
 
   useEffect(() => {
-    getVersion(classId, lessonId, groupId).then(setVersion)
+    Promise.all([getVersion(classId, lessonId, groupId), getMedia(classId, lessonId, groupId)]).then(
+      ([version, media]) => {
+        setStudySet(version ? stripMeta(version) : null)
+        setPictures(
+          Object.fromEntries(
+            Object.entries(media).filter(([, m]) => m.img).map(([k, m]) => [k, { status: 'ready', img: m.img }]),
+          ),
+        )
+      },
+    )
   }, [classId, lessonId, groupId])
 
-  if (!version) return <p className="muted">Loading…</p>
+  if (studySet === null) return <p className="muted">Loading…</p>
+  if (studySet.sections) {
+    return (
+      <div className="notice">
+        <h2>Made before v2</h2>
+        <p>This lesson uses the old format. Make it again in New lesson to get a study set.</p>
+        <button className="btn" onClick={onClose}>
+          ← All lessons
+        </button>
+      </div>
+    )
+  }
 
-  const canUpdate = !saving && (!groupById(groupId).reviewRequired || reviewed)
+  const keys = pictureParts(groupId, studySet)
+  const drawing = Object.values(pictures).some((p) => p.status === 'loading')
+  const canUpdate = !saving && !drawing && (!groupById(groupId).reviewRequired || reviewed)
+
+  async function newPicture(key) {
+    setPictures((p) => ({ ...p, [key]: { ...p[key], status: 'loading' } }))
+    try {
+      const img = await makePicture(token, keys.find((k) => k.key === key).prompt)
+      setPictures((p) => ({ ...p, [key]: { status: 'ready', img } }))
+    } catch (err) {
+      setPictures((p) => ({ ...p, [key]: { ...p[key], status: p[key]?.img ? 'ready' : 'error' } }))
+      setPictureError(err.message)
+    }
+  }
 
   async function onUpdate() {
     setSaving(true)
     setMessage(null)
     try {
-      await publishWithAudio(teacherId, classId, lessonId, groupId, version)
+      const imgs = Object.fromEntries(
+        Object.entries(pictures).filter(([, p]) => p.img).map(([k, p]) => [k, p.img]),
+      )
+      await publishStudySet({ token, teacherId, classId, lessonId, groupId, studySet, pictures: imgs })
       setReviewed(false)
       setMessage('Updated. Students see the new version now.')
     } catch (err) {
@@ -123,19 +167,23 @@ function EditVersion({ classId, teacherId, lessonId, groupId, flags, onClose }) 
         ← All lessons
       </button>
       <div className="review-list">
-        <VersionEditor
+        <StudySetEditor
           groupId={groupId}
-          version={version}
-          onChange={setVersion}
+          studySet={studySet}
+          onChange={setStudySet}
           reviewed={reviewed}
           onReviewed={setReviewed}
+          pictureKeys={keys}
+          pictures={pictures}
+          pictureError={pictureError}
+          onNewPicture={newPicture}
           flags={flags}
           onResolve={(flagId) => resolveFlag(classId, flagId)}
         />
       </div>
       <div className="actions sticky">
         <button className="btn primary" disabled={!canUpdate} onClick={onUpdate}>
-          {saving ? 'Updating…' : 'Update →'}
+          {saving ? 'Re-recording voice and updating…' : 'Update'}
         </button>
         {message && <span className="muted small">{message}</span>}
       </div>

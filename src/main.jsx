@@ -4,6 +4,7 @@ import { KidCoreProvider } from '@k-id/core'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import { AuthProvider } from './auth/AuthProvider.jsx'
 import {
   KID_APPEARANCE,
   KID_BASE_URL,
@@ -21,9 +22,11 @@ createRoot(document.getElementById('root')).render(
       declare={KID_DECLARE}
       appearance={KID_APPEARANCE}
     >
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
     </KidCoreProvider>
   </StrictMode>,
 )
