@@ -13,9 +13,9 @@ const SITE_URL = import.meta.env.VITE_SITE_URL
 // sync with the features Cogteach actually ships.
 export const KID_DECLARE = {
   permissions: [
-    { name: 'mods' }, // research library: players upload and browse topics
-    { name: 'ai-voice-mode' }, // voice teaching (Inworld)
-    { name: 'personalized-recommendations' }, // lessons matched to how a learner learns
+    { name: 'join-groups' }, // joining a class
+    { name: 'ai-voice-mode' }, // 5–7 lessons read aloud with Inworld voice
+    { name: 'text-chat-private' }, // optional note to the teacher on a flag
   ],
   supportEmail: 'myles.sjn@gmail.com',
   iconUrl: '/icon.png', // bundled 512x512 PNG; the SDK sends it inline
@@ -23,4 +23,15 @@ export const KID_DECLARE = {
     privacyPolicyUrl: `${SITE_URL}/privacy.html`,
     termsOfServiceUrl: `${SITE_URL}/terms.html`,
   }),
+}
+
+// Widgets match the Lev-style look (see index.css).
+export const KID_APPEARANCE = {
+  variables: {
+    colorPrimary: '#e8590c',
+    colorText: '#1e1e1e',
+    colorSurface: '#fffff8',
+    colorBorder: '#1e1e1e',
+    fontFamily: 'etbook, Georgia, ui-serif, serif',
+  },
 }

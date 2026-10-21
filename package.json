@@ -8,12 +8,14 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node --env-file-if-exists=.env server/index.js"
+    "server": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/index.js"
   },
   "dependencies": {
     "@k-id/core": "file:k-id-core-web.tgz",
+    "firebase": "^13.1.0",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
