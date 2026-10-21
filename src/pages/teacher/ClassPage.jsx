@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Navigate, useParams } from 'react-router-dom'
+import { Crumbs } from '../../components/Layout.jsx'
 import { listenClass, listenFlags } from '../../lib/data.js'
 import CreateTab from './CreateTab.jsx'
 import ModifyTab from './ModifyTab.jsx'
 import StudentsTab from './StudentsTab.jsx'
 
-const TABS = { students: 'Students', create: 'Create', modify: 'Modify' }
+// Sidebar entries, styled like a course's unit list.
+const TABS = {
+  students: { label: 'Roster', title: 'Students' },
+  create: { label: 'New lesson', title: 'Create' },
+  modify: { label: 'Published', title: 'Modify' },
+}
 
 export default function ClassPage({ teacherId }) {
   const { classId, tab } = useParams()
@@ -29,25 +35,40 @@ export default function ClassPage({ teacherId }) {
   const openFlags = flags.filter((f) => f.status === 'open').length
 
   return (
-    <>
-      <p className="crumbs">
-        <span className="pill fill-green">✓ Verified adult</span>
-        <Link to="/teacher">Classes</Link> · <strong>{cls.name}</strong> ·{' '}
-        <span className="muted small">
-          join code <code className="code">{cls.joinCode}</code>
-        </span>
-      </p>
-      <nav className="tabs">
-        {Object.entries(TABS).map(([id, label]) => (
-          <NavLink key={id} to={`/teacher/class/${classId}/${id}`} className="navlink">
-            {label}
-            {id === 'modify' && openFlags > 0 && <span className="badge">{openFlags}</span>}
-          </NavLink>
-        ))}
-      </nav>
-      {tab === 'students' && <StudentsTab classId={classId} />}
-      {tab === 'create' && <CreateTab classId={classId} teacherId={teacherId} />}
-      {tab === 'modify' && <ModifyTab classId={classId} teacherId={teacherId} flags={flags} />}
-    </>
+    <div className="with-sidebar">
+      <aside className="sidebar">
+        <div className="sidebar-head">
+          <img src="/icon.png" alt="" />
+          <div>
+            <strong>{cls.name}</strong>
+            <span className="muted small">
+              Join code <span className="code">{cls.joinCode}</span>
+            </span>
+          </div>
+        </div>
+        <nav className="sidebar-nav">
+          {Object.entries(TABS).map(([id, { label, title }]) => (
+            <NavLink key={id} to={`/teacher/class/${classId}/${id}`} className="side-item">
+              <span className="side-text">
+                <span className="label">{label}</span>
+                {title}
+              </span>
+              {id === 'modify' && openFlags > 0 && <span className="badge">{openFlags}</span>}
+            </NavLink>
+          ))}
+        </nav>
+      </aside>
+
+      <section>
+        <Crumbs items={[{ to: '/teacher', label: 'Classes' }, { label: cls.name }]} />
+        <div className="crumbs">
+          <span className="pill green">✓ Verified adult</span>
+        </div>
+        <h1>{TABS[tab].title}</h1>
+        {tab === 'students' && <StudentsTab classId={classId} />}
+        {tab === 'create' && <CreateTab classId={classId} teacherId={teacherId} />}
+        {tab === 'modify' && <ModifyTab classId={classId} teacherId={teacherId} flags={flags} />}
+      </section>
+    </div>
   )
 }

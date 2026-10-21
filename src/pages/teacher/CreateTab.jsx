@@ -98,7 +98,7 @@ export default function CreateTab({ classId, teacherId }) {
   return (
     <>
       {(phase === 'idle' || phase === 'building') && (
-        <form className="stack" onSubmit={onGenerate}>
+        <form className="panel stack" onSubmit={onGenerate}>
           <label htmlFor="prompt">Lesson prompt</label>
           <textarea
             id="prompt"

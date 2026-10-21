@@ -58,6 +58,7 @@ export default function ModifyTab({ classId, teacherId, flags }) {
             const count = openFlags.filter((f) => f.lessonId === l.id).length
             return (
               <li key={l.id} className="card">
+                <p className="label">Lesson</p>
                 <h3>
                   {l.title} {count > 0 && <span className="badge">⚑ {count}</span>}
                 </h3>

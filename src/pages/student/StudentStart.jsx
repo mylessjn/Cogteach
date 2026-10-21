@@ -53,18 +53,15 @@ export default function StudentStart() {
         <FirebaseMissing />
       ) : (
         <>
-          <Hero eyebrow="Student">
-            Who's <em>learning</em>?
-          </Hero>
+          <Hero eyebrow="Students">Who's learning today?</Hero>
 
           {profiles.length > 0 && (
             <ul className="cards">
               {profiles.map((p) => (
                 <li key={p.id} className="card">
+                  <p className="label">Ages {groupById(p.ageGroup)?.label}</p>
                   <h3>{p.displayName}</h3>
-                  <p className="muted small">
-                    {p.className} · {groupById(p.ageGroup)?.label}
-                  </p>
+                  <p className="muted small">{p.className}</p>
                   <div className="actions">
                     <Link to={`/student/${p.id}`} className="btn small primary">
                       Open lessons →
@@ -78,7 +75,7 @@ export default function StudentStart() {
             </ul>
           )}
 
-          <form className="stack narrow" onSubmit={onJoin}>
+          <form className="panel stack narrow" onSubmit={onJoin}>
             <h2>Join a class</h2>
             <label htmlFor="name">Your first name</label>
             <input id="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={30} />

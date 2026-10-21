@@ -106,9 +106,7 @@ function Membership({ profile, children }) {
   if (!permission.enabled) {
     return (
       <>
-        <Hero eyebrow={profile.className}>
-          Ask a <em>parent</em>.
-        </Hero>
+        <Hero eyebrow={profile.className}>Ask a parent</Hero>
         <p className="lede">
           {permission.managedBy === 'GUARDIAN'
             ? 'A parent or guardian needs to say yes before you can join this class.'
@@ -124,9 +122,7 @@ function Membership({ profile, children }) {
 function Settings({ profile }) {
   return (
     <>
-      <Hero eyebrow={profile.displayName}>
-        Your <em>settings</em>.
-      </Hero>
+      <Hero eyebrow={profile.displayName}>Settings</Hero>
       <SettingsPanel profile={profile} />
     </>
   )

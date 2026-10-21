@@ -33,52 +33,105 @@ export default function Lesson({ profile }) {
 
   const sectionProps = { profile, lessonId, group }
   const n = version.sections.length
+  const stepWord = group.id === 'concrete' ? 'Step' : 'Part'
+
+  // Sidebar: one entry per section. One-per-screen groups jump to it; full-page
+  // groups scroll to it.
+  function goTo(i) {
+    if (group.onePerScreen) setIndex(i)
+    else document.getElementById(`section-${i}`)?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
-    <article className={`lesson lesson-${group.id}`}>
-      <Link to={back} className="muted small">
-        ← My lessons
-      </Link>
-      <p className="eyebrow">{group.label}</p>
-      <h1 className="lesson-title">{version.title}</h1>
-
-      {group.id === 'preoperational' && (
-        <ReadAloud classId={profile.classId} lessonId={lessonId} index={index} profileId={profile.id} />
-      )}
-
-      {group.onePerScreen ? (
-        <>
-          <p className="muted small">
-            {group.id === 'concrete' ? 'Step' : 'Part'} {index + 1} of {n}
-          </p>
-          <Section key={index} index={index} section={version.sections[index]} {...sectionProps} />
-          <div className="actions">
-            <button className="btn" disabled={index === 0} onClick={() => setIndex(index - 1)}>
-              ← Back
-            </button>
-            {index < n - 1 ? (
-              <button className="btn primary big" onClick={() => setIndex(index + 1)}>
-                Next →
-              </button>
-            ) : (
-              <Link to={back} className="btn primary big">
-                Done ✓
-              </Link>
-            )}
+    <div className="with-sidebar">
+      <aside className="sidebar">
+        <div className="sidebar-head">
+          <img src="/icon.png" alt="" />
+          <div>
+            <strong>{version.title}</strong>
+            <span className="muted small">Ages {group.label}</span>
           </div>
-        </>
-      ) : (
-        version.sections.map((s, i) => <Section key={i} index={i} section={s} {...sectionProps} />)
-      )}
-    </article>
+        </div>
+        <nav className="sidebar-nav">
+          {version.sections.map((s, i) => {
+            const state = !group.onePerScreen ? '' : i < index ? 'done' : i === index ? 'current' : ''
+            return (
+              <button
+                key={i}
+                className={`side-item ${group.onePerScreen && i === index ? 'active' : ''}`}
+                onClick={() => goTo(i)}
+              >
+                <span className={`dot ${state}`}>{state === 'done' ? '✓' : i + 1}</span>
+                <span className="side-text">
+                  <span className="label">
+                    {stepWord} {i + 1}
+                  </span>
+                  {s.heading}
+                </span>
+              </button>
+            )
+          })}
+        </nav>
+      </aside>
+
+      <article className={`lesson-${group.id}`}>
+        <nav className="crumbs" aria-label="Breadcrumb">
+          <Link to={back}>My lessons</Link>
+          <span aria-hidden="true">·</span>
+          <span>{version.title}</span>
+        </nav>
+
+        {group.onePerScreen && (
+          <div className="progress" aria-label={`${stepWord} ${index + 1} of ${n}`}>
+            <span style={{ width: `${((index + 1) / n) * 100}%` }} />
+          </div>
+        )}
+
+        <div className="lesson-card">
+          {group.id === 'preoperational' && (
+            <ReadAloud classId={profile.classId} lessonId={lessonId} index={index} profileId={profile.id} />
+          )}
+
+          {group.onePerScreen ? (
+            <>
+              <p className="label">
+                {stepWord} {index + 1} of {n}
+              </p>
+              <Section key={index} index={index} section={version.sections[index]} {...sectionProps} />
+              <div className="actions">
+                <button className="btn big" disabled={index === 0} onClick={() => setIndex(index - 1)}>
+                  ← Back
+                </button>
+                {index < n - 1 ? (
+                  <button className="btn primary big" onClick={() => setIndex(index + 1)}>
+                    Next →
+                  </button>
+                ) : (
+                  <Link to={back} className="btn primary big">
+                    Done ✓
+                  </Link>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <h1>{version.title}</h1>
+              {version.sections.map((s, i) => (
+                <Section key={i} index={i} section={s} {...sectionProps} />
+              ))}
+            </>
+          )}
+        </div>
+      </article>
+    </div>
   )
 }
 
 function Section({ index, section, profile, lessonId, group }) {
   return (
-    <section className="lesson-section">
+    <section className="lesson-section" id={`section-${index}`}>
       <h2>
-        {group.id === 'concrete' && <span className="step">{index + 1}</span>}
+        {group.id === 'concrete' && `${index + 1}. `}
         {section.heading}
       </h2>
       <p>{section.body}</p>

@@ -4,7 +4,7 @@ import { Hero } from '../../components/Layout.jsx'
 import { getVersion, listenLessons } from '../../lib/data.js'
 import { groupById } from '../../lib/groups.js'
 
-// Published lessons for this student's age group only.
+// Published lessons for this student's age group only, as a course list.
 export default function MyLessons({ profile }) {
   const [lessons, setLessons] = useState(null)
   const [titles, setTitles] = useState({})
@@ -28,21 +28,26 @@ export default function MyLessons({ profile }) {
 
   return (
     <>
-      <Hero eyebrow={`${profile.className} · ${groupById(profile.ageGroup).label}`}>
-        Hi {profile.displayName}, here are your <em>lessons</em>.
+      <Hero eyebrow={`${profile.className} · Ages ${groupById(profile.ageGroup).label}`}>
+        Hi {profile.displayName}! Here are your lessons.
       </Hero>
       {lessons === null ? (
         <p className="muted">Loading…</p>
       ) : lessons.length === 0 ? (
-        <p className="muted">No lessons yet. Your teacher will add some soon.</p>
+        <div className="notice">
+          <p>No lessons yet. Your teacher will add some soon.</p>
+        </div>
       ) : (
         <ul className="cards">
-          {lessons.map((l) => (
+          {lessons.map((l, i) => (
             <li key={l.id} className="card">
+              <p className="label">Lesson {lessons.length - i}</p>
               <h3>{titles[l.id] ?? '…'}</h3>
-              <Link to={`/student/${profile.id}/lesson/${l.id}`} className="btn small primary">
-                Open lesson →
-              </Link>
+              <div className="actions">
+                <Link to={`/student/${profile.id}/lesson/${l.id}`} className="btn primary small">
+                  Start lesson →
+                </Link>
+              </div>
             </li>
           ))}
         </ul>

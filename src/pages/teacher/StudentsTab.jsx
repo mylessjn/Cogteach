@@ -18,14 +18,15 @@ export default function StudentsTab({ classId }) {
         if (inGroup.length === 0) return null
         return (
           <section key={g.id} className="card">
-            <h3>
-              {g.label} · {g.name} <span className="muted small">({inGroup.length})</span>
-            </h3>
+            <p className="label">
+              Ages {g.label} · {inGroup.length} student{inGroup.length === 1 ? '' : 's'}
+            </p>
+            <h3>{g.name}</h3>
             <ul className="plain">
               {inGroup.map((s) => (
                 <li key={s.id} className="row">
                   <span>{s.displayName}</span>
-                  <span className={`pill ${s.status === 'Active' ? 'fill-green' : 'fill-orange'}`}>
+                  <span className={`pill ${s.status === 'Active' ? 'green' : 'orange'}`}>
                     {s.status}
                   </span>
                 </li>

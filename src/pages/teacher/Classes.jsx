@@ -25,11 +25,9 @@ export default function Classes({ teacherId }) {
   return (
     <>
       <p className="crumbs">
-        <span className="pill fill-green">✓ Verified adult</span>
+        <span className="pill green">✓ Verified adult</span>
       </p>
-      <Hero eyebrow="Teacher">
-        Your <em>classes</em>.
-      </Hero>
+      <Hero eyebrow="Teacher dashboard">Your classes</Hero>
 
       {classes === null ? (
         <p className="muted">Loading…</p>
@@ -39,19 +37,22 @@ export default function Classes({ teacherId }) {
         <ul className="cards">
           {classes.map((c) => (
             <li key={c.id} className="card">
+              <p className="label">Class</p>
               <h3>{c.name}</h3>
               <p className="muted small">
                 Join code <code className="code">{c.joinCode}</code>
               </p>
-              <Link to={`class/${c.id}/create`} className="btn small">
-                Open class →
-              </Link>
+              <div className="actions">
+                <Link to={`class/${c.id}/create`} className="btn primary small">
+                  Open class →
+                </Link>
+              </div>
             </li>
           ))}
         </ul>
       )}
 
-      <form className="inline-form" onSubmit={onCreate}>
+      <form className="panel inline-form" onSubmit={onCreate}>
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -59,7 +60,7 @@ export default function Classes({ teacherId }) {
           aria-label="New class name"
         />
         <button className="btn primary" disabled={busy || !name.trim()}>
-          New class →
+          New class
         </button>
       </form>
     </>

@@ -25,13 +25,13 @@ export const KID_DECLARE = {
   }),
 }
 
-// Widgets match the Lev-style look (see index.css).
+// Widgets match the app's look (see index.css).
 export const KID_APPEARANCE = {
   variables: {
-    colorPrimary: '#e8590c',
-    colorText: '#1e1e1e',
-    colorSurface: '#fffff8',
-    colorBorder: '#1e1e1e',
-    fontFamily: 'etbook, Georgia, ui-serif, serif',
+    colorPrimary: '#1865f2',
+    colorText: '#21242c',
+    colorSurface: '#ffffff',
+    colorBorder: '#dbdcdd',
+    fontFamily: "Lato, 'Noto Sans', Helvetica, sans-serif",
   },
 }

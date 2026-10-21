@@ -28,7 +28,7 @@ export function VersionEditor({ groupId, version, onChange, reviewed, onReviewed
         return (
           <section key={i} className="edit-section">
             <div className="edit-section-head">
-              <span className="step">{i + 1}</span>
+              <span className="dot current">{i + 1}</span>
               <input
                 value={section.heading}
                 onChange={(e) => setSection(i, 'heading', e.target.value)}

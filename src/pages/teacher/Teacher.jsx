@@ -67,9 +67,7 @@ function VerifyIntro() {
   if (verifyAge.status !== 'running' || verifyAge.step !== 'email') return null
   return (
     <>
-      <Hero eyebrow="Teacher">
-        Verify you're an <em>adult</em>.
-      </Hero>
+      <Hero eyebrow="Teacher">Verify you're an adult</Hero>
       <p className="lede">
         Only a verified adult can approve AI lessons that go to children. k-ID emails you a link
         to confirm. You only do this once.

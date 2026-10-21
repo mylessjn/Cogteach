@@ -1,54 +1,34 @@
-/* Lev-style base: paper background, ET Book body, Virgil (hand-drawn) for
-   headings, nav and buttons. Values match lev-self.vercel.app. */
-@font-face {
-  font-family: 'virgil';
-  src: url('https://cdn.jsdelivr.net/npm/@excalidraw/excalidraw@0.17.6/dist/excalidraw-assets/Virgil.woff2')
-    format('woff2');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'etbook';
-  src: url('https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff')
-    format('woff');
-  font-display: swap;
-}
-@font-face {
-  font-family: 'etbook';
-  font-style: italic;
-  src: url('https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff')
-    format('woff');
-  font-display: swap;
-}
-
+/* Khan Academy-style base: Lato, navy header, blue actions, white cards on a
+   light gray page. */
 :root {
-  --paper: #fffff8;
-  --ink: #1e1e1e;
-  --muted: #495057;
-  --faint: #adb5bd;
-  --orange: #e8590c;
-  --blue: #1971c2;
-  --green: #2f9e44;
-  --red: #e03131;
-  --fill-orange: #ffe8cc;
-  --fill-blue: #d0ebff;
-  --fill-purple: #f3d9fa;
-  --fill-green: #d3f9d8;
-  --fill-gray: #f1f3f5;
+  --navy: #0b2149;
+  --blue: #1865f2;
+  --blue-dark: #1b50b3;
+  --blue-light: #eef4ff;
+  --ink: #21242c;
+  --muted: rgba(33, 36, 44, 0.64);
+  --faint: rgba(33, 36, 44, 0.32);
+  --border: #dbdcdd;
+  --page: #f7f8fa;
+  --white: #fff;
+  --green: #00a60e;
+  --green-light: #e6f6e8;
+  --orange: #ff9c39;
+  --orange-light: #fff3e6;
+  --red: #d92916;
+  --radius: 8px;
 
-  --serif: etbook, Georgia, ui-serif, serif;
-  --hand: virgil, 'Comic Sans MS', cursive;
-  --wobble: 255px 15px 225px 15px / 15px 225px 15px 255px;
-  --wobble-2: 15px 225px 15px 255px / 255px 15px 225px 15px;
+  --sans: Lato, 'Noto Sans', Helvetica, Corbel, sans-serif;
 
-  font: 18.4px/1.55 var(--serif);
+  font: 16px/1.5 var(--sans);
   color: var(--ink);
-  background: var(--paper);
+  background: var(--page);
   -webkit-font-smoothing: antialiased;
 }
 
 body {
   margin: 0;
-  background: var(--paper);
+  background: var(--page);
 }
 
 #root {
@@ -60,37 +40,30 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--hand);
-  font-weight: 400;
+  font-weight: 700;
   color: var(--ink);
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 h1 {
-  font-size: 48px;
+  font-size: 36px;
   margin: 0 0 16px;
 }
 
 h2 {
-  font-size: 28px;
+  font-size: 24px;
   margin: 24px 0 8px;
 }
 
 h3 {
-  font-size: 22px;
+  font-size: 18px;
   margin: 0 0 4px;
 }
 
 @media (max-width: 640px) {
   h1 {
-    font-size: 36px;
+    font-size: 28px;
   }
-}
-
-/* The one italic word in a headline is ET Book italic, like Lev's body. */
-h1 em {
-  font-family: var(--serif);
-  font-style: italic;
 }
 
 p {
@@ -98,13 +71,14 @@ p {
 }
 
 a {
-  color: var(--ink);
+  color: var(--blue);
 }
 
 code {
   font-family: ui-monospace, Consolas, monospace;
-  font-size: 0.85em;
-  background: var(--fill-gray);
+  font-size: 0.9em;
+  background: var(--page);
+  border: 1px solid var(--border);
   padding: 1px 6px;
   border-radius: 4px;
 }
@@ -114,24 +88,30 @@ textarea,
 select {
   font: inherit;
   color: var(--ink);
-  background: #fff;
-  border: 1.5px solid var(--ink);
-  border-radius: var(--wobble-2);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
   padding: 8px 12px;
   width: 100%;
   box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid var(--blue);
+    outline-offset: -1px;
+    border-color: var(--blue);
+  }
 }
 
 textarea {
   resize: vertical;
-  border-radius: 12px;
 }
 
 input[type='checkbox'] {
   width: auto;
-  accent-color: var(--orange);
+  accent-color: var(--blue);
 }
 
 label {
-  font-family: var(--hand);
+  font-weight: 700;
+  font-size: 14px;
 }

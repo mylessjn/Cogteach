@@ -1,26 +1,31 @@
 import { Link, NavLink } from 'react-router-dom'
 
-// Lev-style page: brand left, a few text links right, one-line footer.
-export function Layout({ links = [], badge, children }) {
+// Khan Academy-style page: navy header with brand left and links right, gray
+// page, one-line footer.
+export function Layout({ links = [], children, bare = false }) {
   return (
     <div className="page">
       <header className="topbar">
-        <Link to="/" className="brand">
-          Cog<span className="accent">teach</span>
-        </Link>
-        <nav className="navlinks">
-          {badge}
-          {links.map(({ to, label, end }) => (
-            <NavLink key={to} to={to} end={end} className="navlink">
-              {label}
-            </NavLink>
-          ))}
-        </nav>
+        <div className="topbar-inner">
+          <Link to="/" className="brand">
+            <img src="/icon.png" alt="" />
+            Cogteach
+          </Link>
+          <nav className="navlinks">
+            {links.map(({ to, label, end }) => (
+              <NavLink key={to} to={to} end={end} className="navlink">
+                {label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
       </header>
-      <main className="content">{children}</main>
+      {bare ? children : <main className="content">{children}</main>}
       <footer className="footer">
-        Cogteach · Build for Everyone · Education track ·{' '}
-        <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+        <div className="footer-inner">
+          Cogteach · Build for Everyone · Education track ·{' '}
+          <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+        </div>
       </footer>
     </div>
   )
@@ -32,6 +37,20 @@ export function Hero({ eyebrow, children }) {
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       <h1>{children}</h1>
     </div>
+  )
+}
+
+// "Classes · Room 12 Science" style trail. Items: { to?, label }.
+export function Crumbs({ items }) {
+  return (
+    <nav className="crumbs" aria-label="Breadcrumb">
+      {items.map((item, i) => (
+        <span key={i}>
+          {i > 0 && <span aria-hidden="true">· </span>}
+          {item.to ? <Link to={item.to}>{item.label}</Link> : item.label}
+        </span>
+      ))}
+    </nav>
   )
 }
 
