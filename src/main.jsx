@@ -13,7 +13,7 @@ import {
 import './index.css'
 import App from './App.jsx'
 import { ClearOnMount } from './kid/ClearOnMount.jsx'
-import { sendClaimToken } from './kid/claim.js'
+import { notifySession, sendClaimToken } from './kid/claim.js'
 import { KID_BASE_URL, KID_DECLARE, KID_PUBLISHABLE_KEY } from './kid/config.js'
 import {
   CHALLENGE_ID_KEY,
@@ -37,7 +37,10 @@ createRoot(document.getElementById('root')).render(
         jurisdiction="auto"
         sessionId={savedSessionId}
         challengeId={savedChallengeId}
-        onSession={(id) => saveId(SESSION_ID_KEY, id)}
+        onSession={(id) => {
+          saveId(SESSION_ID_KEY, id)
+          notifySession()
+        }}
         onChallenge={(id) => saveId(CHALLENGE_ID_KEY, id)}
         onClaim={sendClaimToken}
       >
@@ -73,6 +76,10 @@ createRoot(document.getElementById('root')).render(
             </KidAgeGatePass>
           </KidAgeGate>
         </main>
+        <footer className="legal-links">
+          <a href="/privacy.html">Privacy Policy</a>
+          <a href="/terms.html">Terms of Service</a>
+        </footer>
       </KidSessionProvider>
     </KidCoreProvider>
   </StrictMode>,

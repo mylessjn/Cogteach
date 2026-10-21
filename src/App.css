@@ -86,3 +86,16 @@ h3 {
   max-width: 480px;
   margin-top: 16px;
 }
+
+.legal-links {
+  margin-top: auto;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 14px;
+
+  a {
+    color: var(--text);
+  }
+}
