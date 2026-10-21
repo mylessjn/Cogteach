@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { countryFlag } from '../../kid/country.js'
 import { listenStudents } from '../../lib/data.js'
 import { GROUPS } from '../../lib/groups.js'
 
@@ -12,6 +13,11 @@ export default function StudentsTab({ classId }) {
   }
 
   return (
+    <>
+    <p className="muted small">
+      k-ID checks each student's age under the laws of the country it detects, so who needs a
+      parent's yes can differ from student to student.
+    </p>
     <div className="groups">
       {GROUPS.map((g) => {
         const inGroup = students.filter((s) => s.ageGroup === g.id)
@@ -25,7 +31,15 @@ export default function StudentsTab({ classId }) {
             <ul className="plain">
               {inGroup.map((s) => (
                 <li key={s.id} className="row">
-                  <span>{s.displayName}</span>
+                  <span>
+                    {s.displayName}
+                    {s.country && (
+                      <span className="muted small" title="Country k-ID detected; its laws set the consent rules">
+                        {' '}
+                        {countryFlag(s.country)} {s.country}
+                      </span>
+                    )}
+                  </span>
                   <span className={`pill ${s.status === 'Active' ? 'green' : 'orange'}`}>
                     {s.status}
                   </span>
@@ -36,5 +50,6 @@ export default function StudentsTab({ classId }) {
         )
       })}
     </div>
+    </>
   )
 }

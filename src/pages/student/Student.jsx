@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import { useAuth } from '../../auth/context.js'
 import { FirebaseMissing, Hero, Layout } from '../../components/Layout.jsx'
 import { api, createKidBackend } from '../../kid/claim.js'
+import { CountryRules } from '../../kid/CountryRules.jsx'
 import { KidGate } from '../../kid/KidGate.jsx'
 import { kidKeys, loadId, saveId } from '../../kid/storage.js'
 import { findClassByCode, getClass, saveStudent } from '../../lib/data.js'
@@ -56,15 +57,17 @@ export default function Student() {
   )
 }
 
-// After k-ID's age check passes, the server reads the age k-ID recorded and
-// stores only the group.
+// After k-ID's age check passes, the server reads the age and country k-ID
+// recorded and stores only the group and the country code. Accounts made
+// before the country was saved pick it up once, in the background.
 function AgeGroup({ backend, children }) {
   const { account, token, setAccount } = useAuth()
   const [error, setError] = useState(null)
   const missing = !account.ageGroup
+  const [refresh] = useState(() => !account.ageGroup || !account.country)
 
   useEffect(() => {
-    if (!missing) return
+    if (!refresh) return
     let cancelled = false
     // The claim can still be landing when the gate passes; the server answers
     // 409 until it has, so wait and try again a few times.
@@ -85,9 +88,9 @@ function AgeGroup({ backend, children }) {
     return () => {
       cancelled = true
     }
-  }, [missing, backend, token, setAccount])
+  }, [refresh, backend, token, setAccount])
 
-  if (error) {
+  if (error && missing) {
     return (
       <div className="notice">
         <h2>We couldn't finish the age check</h2>
@@ -175,6 +178,7 @@ function Membership({ children }) {
     saveStudent(account.classId, account.id, {
       displayName: account.displayName,
       ageGroup: account.ageGroup,
+      country: account.country ?? null,
       kidSessionId: sessionId ?? null,
       status,
     }).catch((err) => console.error('Failed to save student', err))
@@ -202,9 +206,10 @@ function Membership({ children }) {
         <Hero eyebrow={className}>Ask a parent</Hero>
         <p className="lede">
           {permission.managedBy === 'GUARDIAN'
-            ? 'A parent or guardian needs to say yes before you can join this class.'
+            ? 'Where you live, a parent or guardian needs to say yes before you can join a class.'
             : 'Turn on joining groups to see your class.'}
         </p>
+        <CountryRules compact />
         <SettingsPanel />
       </>
     )
@@ -217,6 +222,7 @@ function Settings() {
   return (
     <>
       <Hero eyebrow={account.displayName}>Settings</Hero>
+      <CountryRules compact />
       <SettingsPanel />
     </>
   )

@@ -7,8 +7,10 @@ import {
   KidAgeGatePending,
   KidAgeGateProhibited,
   KidSessionProvider,
+  useKidAgeGate,
 } from '@k-id/core'
 import { ClearOnMount } from './ClearOnMount.jsx'
+import { CountryRules } from './CountryRules.jsx'
 import { kidKeys, loadId, saveId } from './storage.js'
 
 // One k-ID age gate + session per account. k-ID asks the country (auto) and
@@ -34,6 +36,7 @@ export function KidGate({ accountId, backend, pending, children }) {
       onChallenge={(id) => saveId(keys.challengeId, id)}
       onClaim={backend.sendClaimToken}
     >
+      <GateRules />
       <KidAgeGate>
         <KidAgeGatePending>
           {pending ?? (
@@ -73,4 +76,12 @@ export function KidGate({ accountId, backend, pending, children }) {
       </KidAgeGate>
     </KidSessionProvider>
   )
+}
+
+// While k-ID is asking the age or waiting on a parent, show which country's
+// rules apply and what they are.
+function GateRules() {
+  const { status } = useKidAgeGate()
+  if (status !== 'running' && status !== 'pending') return null
+  return <CountryRules />
 }

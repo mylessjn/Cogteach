@@ -11,7 +11,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/index.js"
+    "server": "node --env-file-if-exists=.env --env-file-if-exists=.env.local server/index.js",
+    "deploy:legal": "npx firebase-tools@15.34.1 deploy --only hosting"
   },
   "dependencies": {
     "@k-id/core": "file:k-id-core-web.tgz",

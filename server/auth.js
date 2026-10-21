@@ -40,6 +40,7 @@ export const publicAccount = (a) => ({
   role: a.role,
   displayName: a.displayName,
   ageGroup: a.ageGroup ?? null,
+  country: a.country ?? null,
   classId: a.classId ?? null,
 })
 

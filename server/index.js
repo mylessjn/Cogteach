@@ -92,7 +92,8 @@ async function handleSessionReady(req, res, account) {
 
 // POST /api/me/age-group
 // Reads the age k-ID's own age check recorded, picks the group, and stores
-// only the group (never the age or birthday).
+// only the group (never the age or birthday), plus the country code k-ID
+// resolved from the connection, whose laws set the consent rules.
 async function handleAgeGroup(req, res, account) {
   if (!isUnlocked(account)) return send(res, 409, { error: 'Finish the age check first.' })
   const session = await kid.getSession(account.kidSessionId)
@@ -106,7 +107,8 @@ async function handleAgeGroup(req, res, account) {
   }
   const ageGroup = age != null ? groupForAge(age) : session.ageCategory === 'adult' ? 'adult' : null
   if (!ageGroup) return send(res, 502, { error: "k-ID didn't return an age for this account." })
-  const updated = await updateAccount(account.id, { ageGroup })
+  const country = /^[A-Z]{2}(-[A-Z0-9]{1,3})?$/.test(session.jurisdiction ?? '') ? session.jurisdiction : null
+  const updated = await updateAccount(account.id, { ageGroup, country })
   send(res, 200, { account: auth.publicAccount(updated) })
 }
 

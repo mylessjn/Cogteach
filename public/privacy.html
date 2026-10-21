@@ -9,9 +9,14 @@
   </head>
   <body>
     <!--
-      DRAFT. Not reviewed by a lawyer. Before launch, fill in every [bracketed]
-      item, check it matches what Cogteach actually does, and have it reviewed,
-      especially the children's privacy sections (COPPA, GDPR, UK AADC).
+      DRAFT. Not reviewed by a lawyer. Before launch:
+      - fill in every [bracketed] item;
+      - lock down Firestore security rules (the hackathon database runs in test
+        mode, which section 8 does not cover) and move accounts off the single
+        server file;
+      - add an in-app "delete my account" button (section 6 currently relies on
+        email requests);
+      - have it reviewed, especially the children's sections (COPPA, GDPR, UK AADC).
     -->
     <main>
       <h1>Privacy Policy</h1>
@@ -20,13 +25,20 @@
       <div class="summary">
         <p><strong>The short version</strong></p>
         <ul>
-          <li>Cogteach is a learning app built around how people learn at different ages.</li>
-          <li>We collect as little as we can. We don't sell your information and we don't show ads.</li>
           <li>
-            Our partner k-ID checks your age and, for children, asks a parent or guardian
-            for permission before features that need it are turned on.
+            Cogteach turns one lesson from a teacher into a study set for each age group: ages 3–6,
+            7–11, 12–18 and 19+.
           </li>
-          <li>Parents and guardians can review, change or delete their child's information at any time.</li>
+          <li>
+            Our partner k-ID checks your age and works out your country, so the laws where you live
+            decide when a parent must say yes and which features are on.
+          </li>
+          <li>
+            We keep your <strong>age group</strong> and <strong>country code</strong>, never your
+            exact age or birthday.
+          </li>
+          <li>Students never type to an AI. We don't sell your information and we don't show ads.</li>
+          <li>Parents and guardians can review, change or delete their child's information.</li>
         </ul>
       </div>
 
@@ -34,7 +46,7 @@
       <p>
         Cogteach ("we", "us") is run by [legal name of the person or company that owns Cogteach],
         [mailing address]. This policy explains what information we collect when you use the
-        Cogteach website and app, why we collect it, and the choices you have.
+        Cogteach website, why we collect it, and the choices you have.
       </p>
       <p>
         Questions? Email <a href="mailto:myles.sjn@gmail.com">myles.sjn@gmail.com</a>.
@@ -42,49 +54,69 @@
 
       <h2>2. Information we collect</h2>
 
-      <h3>Age and permission information (through k-ID)</h3>
+      <h3>Your account</h3>
       <p>
-        When you first open Cogteach, an age check run by our partner
-        <a href="https://www.k-id.com" target="_blank" rel="noopener">k-ID</a> asks for your age
-        or date of birth and works out which country or region you are in from your internet
-        connection. If you are a child, k-ID asks for a parent or guardian's email address so
-        they can approve your account. k-ID collects and handles this information under its own
+        Teachers and students log in with a username and password. We store the username, the
+        first name you choose to show, whether you are a teacher or a student, and your password
+        <em>in hashed form</em> (we can't read it). We don't ask for your email address to make an
+        account.
+      </p>
+
+      <h3>Age, country and permissions (through k-ID)</h3>
+      <p>
+        After you make an account, an age check run by our partner
+        <a href="https://www.k-id.com" target="_blank" rel="noopener">k-ID</a> asks your age (or
+        date of birth, depending on what your country allows) and works out your country or region
+        from your internet connection. It then applies that place's laws. If a parent or guardian
+        must approve, k-ID asks for their email address and sends them the request. Teachers also
+        prove to k-ID that they are an adult, by email. k-ID handles this information under its own
         privacy policy.
       </p>
       <p>
-        From k-ID, Cogteach receives a session identifier, your age group, your country or
-        region, and which features you are allowed to use. We use this to show you the right
-        features and to keep the right protections in place.
+        From k-ID, our server receives the result of the age check. From it we keep only your
+        <strong>age group</strong> (3–6, 7–11, 12–18 or 19+) and your <strong>country code</strong>
+        (for example, "US"), plus the identifier of your k-ID session and which features k-ID allows
+        for you. We do not store your exact age or date of birth.
+      </p>
+
+      <h3>Your class and learning progress</h3>
+      <ul>
+        <li>The class you join, and whether you are active or waiting for a parent.</li>
+        <li>
+          Your progress: points, the days you studied (for streaks), your score and time on each
+          lesson, and when flashcards are due again.
+        </li>
+        <li>
+          For ages 12–18, only if k-ID allows them for you: the avatar you pick, and your place on
+          the class leaderboard.
+        </li>
+        <li>
+          Flags you send your teacher on a part of a lesson (a reason such as "I'm confused"), and
+          an optional short note if k-ID allows private messages for you.
+        </li>
+      </ul>
+
+      <h3>Your voice (microphone)</h3>
+      <p>
+        If voice is on for you in k-ID, some activities let you say a word out loud. When you tap
+        the microphone, a clip of about 2.5 seconds is sent to our partner Inworld AI to turn it
+        into text, so we can check the word. <strong>We don't store your recording or the
+        text</strong>; we only keep whether you got a star. If voice is off, the microphone isn't
+        shown.
       </p>
 
       <h3>Information stored on your device</h3>
       <p>
-        Cogteach stores a few identifiers in your browser's local storage: a random player ID,
-        your k-ID session ID, and the ID of any pending parent request. These let you pick up
-        where you left off. They are not used for advertising or to track you on other sites.
+        Your browser keeps your login for the current tab (in session storage) and your k-ID
+        session and any pending parent-request IDs (in local storage), so you can pick up where you
+        left off. They are not used for advertising or to track you on other sites.
       </p>
 
-      <h3>Information you choose to share</h3>
-      <ul>
-        <li>
-          <strong>Research library uploads.</strong> If the research library is turned on for
-          you, anything you upload (such as research topics, notes or files) is stored by us
-          and can be seen by other Cogteach users.
-        </li>
-        <li>
-          <strong>Voice tutor.</strong> If the voice tutor is turned on for you, what you say to it
-          is processed so the AI tutor can understand and answer you (see section 5).
-        </li>
-        <li>
-          <strong>Messages to us.</strong> If you email us, we keep the message and your email
-          address so we can reply.
-        </li>
-      </ul>
-
-      <h3>Learning activity</h3>
+      <h3>Teachers' lessons</h3>
       <p>
-        If personalized recommendations are turned on for you, we use which lessons you open
-        and finish to suggest what to learn next.
+        When a teacher writes a lesson prompt, it is sent to AI models (see section 5) to build the
+        study sets, voice lines and pictures. A teacher reviews them before students can see them.
+        These steps use the lesson, not information about students.
       </p>
 
       <h3>Technical information</h3>
@@ -95,12 +127,12 @@
 
       <h2>3. How we use information</h2>
       <ul>
-        <li>To run Cogteach and show you age-appropriate content and features.</li>
-        <li>To check age and get parental permission where the law requires it.</li>
-        <li>To personalize learning, only when that feature is turned on.</li>
+        <li>To run Cogteach and show you the study set for your age group.</li>
+        <li>To follow the laws where you live on age, parental consent and features (through k-ID).</li>
+        <li>To show your teacher your class membership, progress and flags.</li>
+        <li>To check spoken words, only when voice is on.</li>
         <li>To keep Cogteach safe, prevent misuse and fix problems.</li>
-        <li>To answer your questions and requests.</li>
-        <li>To meet our legal obligations.</li>
+        <li>To answer your questions and requests, and meet our legal obligations.</li>
       </ul>
       <p>
         We do <strong>not</strong> sell personal information, use it for targeted advertising, or
@@ -108,33 +140,31 @@
       </p>
 
       <h2>4. Children's privacy</h2>
-      <p>
-        Cogteach is designed to be used by children as well as adults, so we take extra care.
-      </p>
+      <p>Cogteach is made for children as well as adults, so we take extra care.</p>
       <ul>
         <li>
-          <strong>Parental consent.</strong> Where the law requires it (for example, under 13 in the
-          United States, or under the age of digital consent in the EU and UK), a parent or
-          guardian must approve before we turn on features that collect or share more
-          information. k-ID sends that request and records the answer.
+          <strong>Your country's rules.</strong> k-ID works out where you are and applies its laws.
+          Below the age set there (for example, under 13 in the United States), a parent or
+          guardian must approve before the child can use Cogteach, and some features need a
+          parent's yes on their own.
         </li>
         <li>
-          <strong>Features stay off until allowed.</strong> Features such as the research library,
-          the voice tutor and personalized recommendations only turn on when the child's age
-          and their parent's choices allow it.
+          <strong>Features stay off until allowed.</strong> Joining a class, voice, private notes,
+          the leaderboard and avatars only turn on when k-ID allows them for the child. If k-ID
+          doesn't allow a feature at all, we hide it.
         </li>
         <li>
-          <strong>Parents stay in control.</strong> Parents and guardians can review the information
-          we hold about their child, change which features are allowed, ask us to stop
-          collecting it, or ask us to delete it, by emailing
-          <a href="mailto:myles.sjn@gmail.com">myles.sjn@gmail.com</a>. Players can also change
-          feature permissions in Cogteach's Settings; features a guardian manages ask a grown-up
-          to approve.
+          <strong>No AI chat for students.</strong> Students never type to an AI model. Everything a
+          child sees was written for their age group and, for ages 3–6 and 7–11, checked by a
+          k-ID-verified adult before publishing.
         </li>
         <li>
-          <strong>Least data.</strong> We don't ask children for more information than an activity
-          needs.
+          <strong>Parents stay in control.</strong> Parents and guardians can review what we hold
+          about their child, change which features are allowed, or ask us to delete it, by emailing
+          <a href="mailto:myles.sjn@gmail.com">myles.sjn@gmail.com</a>. Players can change
+          permissions in Settings; ones a guardian manages ask a grown-up to approve.
         </li>
+        <li><strong>Least data.</strong> No email, photo or exact age is needed from a child.</li>
       </ul>
 
       <h2>5. Who we share information with</h2>
@@ -151,35 +181,40 @@
           <tbody>
             <tr>
               <td>k-ID</td>
-              <td>Age checks and parental consent</td>
-              <td>Age or date of birth, region, parent's email, permission choices</td>
+              <td>Age checks, parental consent, adult verification, permissions</td>
+              <td>Age or date of birth, connection-based location, parent's or teacher's email, permission choices</td>
             </tr>
             <tr>
               <td>Inworld AI</td>
-              <td>The voice tutor</td>
-              <td>Voice recordings and conversation with the tutor, when the feature is on</td>
+              <td>Speech-to-text for spoken words; voice lines; access to AI models</td>
+              <td>Short microphone clips (when voice is on); lesson text and teachers' prompts</td>
             </tr>
             <tr>
-              <td>[Hosting provider]</td>
-              <td>Running our website and servers</td>
-              <td>Information stored on or sent to our servers</td>
+              <td>Google (Gemini models, through Inworld)</td>
+              <td>Writing study sets and drawing pictures for teachers</td>
+              <td>Teachers' prompts and lesson text only</td>
+            </tr>
+            <tr>
+              <td>Google Firebase</td>
+              <td>Storing classes, lessons, progress and flags[; hosting the website]</td>
+              <td>Class data, display names, age groups, country codes, progress and flags</td>
             </tr>
           </tbody>
         </table>
       </div>
       <p>
-        We may also share information if the law requires it, to protect someone's safety, or
-        as part of a merger or sale of Cogteach (in which case this policy will continue to apply
-        to your information).
+        Classmates can see a student's first name, avatar and points on the leaderboard only when
+        k-ID allows the leaderboard for that student. We may also share information if the law
+        requires it, to protect someone's safety, or as part of a merger or sale of Cogteach (in
+        which case this policy will continue to apply).
       </p>
 
       <h2>6. How long we keep information</h2>
       <p>
-        We keep account information while your account is active. When you delete your account,
-        we delete your Cogteach data and ask k-ID to delete your age-check session.
-        Research library uploads are kept until you or a parent delete them, or the account is
-        deleted. [Voice tutor recordings are kept for no longer than X days.] We may keep a small
-        amount of information longer if the law requires it.
+        We keep account and progress information while your account is active. To delete an
+        account, email <a href="mailto:myles.sjn@gmail.com">myles.sjn@gmail.com</a>; we then delete
+        your Cogteach data and ask k-ID to delete your age-check session. Microphone clips are not
+        kept by us. We may keep a small amount of information longer if the law requires it.
       </p>
 
       <h2>7. Your rights and choices</h2>
@@ -199,9 +234,9 @@
 
       <h2>8. Security</h2>
       <p>
-        We use reasonable measures to protect your information, such as encrypted connections
-        and keeping secret keys on our servers only. No system is perfectly secure, so we can't
-        guarantee it.
+        We use reasonable measures to protect your information, such as hashed passwords, encrypted
+        connections, and keeping secret keys on our servers only. No system is perfectly secure, so
+        we can't guarantee it.
       </p>
 
       <h2>9. International transfers</h2>

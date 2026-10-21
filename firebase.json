@@ -1,0 +1,8 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*"],
+    "cleanUrls": false,
+    "redirects": [{ "source": "/", "destination": "/privacy.html", "type": 302 }]
+  }
+}
